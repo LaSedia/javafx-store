@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import application.Main;
-import entities.model.Department;
+import model.entities.Department;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
