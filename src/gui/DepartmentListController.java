@@ -3,9 +3,11 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import application.Main;
+import db.DbIntegrityException;
 import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
@@ -19,6 +21,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -34,7 +37,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	private DepartmentService service = new DepartmentService();
 
 	@FXML
-	private TableView<Department> tableViewDepartment;
+	private TableView<Department> tableViewDepartment; 
 
 	@FXML
 	private TableColumn<Department, Integer> tableColumnId;
@@ -46,7 +49,13 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	private TableColumn<Department, Department> tableColumnEdit;
 
 	@FXML
+	private TableColumn<Department, Department> tableColumnRemove;
+
+	@FXML
 	private Button btNew;
+
+	@FXML
+	private ObservableList<Department> objList;	
 
 	@FXML
 	public void onBtNewAction(ActionEvent event)	{
@@ -55,9 +64,6 @@ public class DepartmentListController implements Initializable, DataChangeListen
 		Department department = new Department();
 		createDialogForm(department, "/gui/DepartmentForm.fxml", parentStage);
 	}
-
-	@FXML
-	private ObservableList<Department> objList;	
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -81,6 +87,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 		objList = FXCollections.observableArrayList(list);
 		tableViewDepartment.setItems(objList);
 		initEditButtons();
+		initRemoveButtons();
 	}
 
 	public void setDepartmentService(DepartmentService service) {
@@ -112,7 +119,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 	}
 
 	@Override
-	public void onDataChanged() {
+	public void onDataChanged() { //chamada quando os dados são alterados
 		updateTableView();
 	}
 
@@ -135,6 +142,43 @@ public class DepartmentListController implements Initializable, DataChangeListen
 						event -> createDialogForm(obj, "/gui/DepartmentForm.fxml", Utils.currentStage(event)));
 			}
 		});
+	}
+
+	private void initRemoveButtons() {
+		tableColumnRemove.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+		tableColumnRemove.setCellFactory(param -> new TableCell<Department, Department>() {
+			private final Button button = new Button("remove");
+
+			@Override
+			protected void updateItem(Department obj, boolean empty) {
+				super.updateItem(obj, empty);
+
+				if (obj == null) {
+					setGraphic(null);
+					return;
+				}
+
+				setGraphic(button);
+				button.setOnAction(
+						event -> removeEntity(obj));
+			}
+		});
+	}
+
+	private void removeEntity(Department obj) {
+		Optional<ButtonType> result = Alerts.showConfirmation("Confirmation", "Are you sure you want to remove " + obj.getName() + "'s department?");
+		
+		if(result.get() == ButtonType.OK)	{
+			if (service == null)	{
+				throw new IllegalArgumentException("Service was null");
+			}
+			try	{
+				service.remove(obj);
+				updateTableView();
+			}	catch (DbIntegrityException e)	{
+				Alerts.showAlert("Error removing objects", null, e.getMessage(), AlertType.ERROR);
+			}
+		}
 	}
 
 }

@@ -29,7 +29,7 @@ public class DepartmentFormController implements Initializable{
 	
 	private DepartmentService service;
 	
-	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
+	private List<DataChangeListener> dataChangeListeners = new ArrayList<>(); //Objetos que querem receber o evento
 
 	@FXML
 	private TextField txtId;
@@ -38,7 +38,7 @@ public class DepartmentFormController implements Initializable{
 	private TextField txtName;
 	
 	@FXML
-	private Label lblError;
+	private Label lblErrorName;
 	
 	@FXML
 	private Button btSave;
@@ -67,6 +67,13 @@ public class DepartmentFormController implements Initializable{
 		}
 	}
 	
+	@FXML
+	public void onBtCancelAction(ActionEvent event)	{
+		System.out.println("clicou cancel");
+		Utils.currentStage(event).close();
+		
+	}
+
 	private void notifyDataChangeListener() {
 		for(DataChangeListener listener : dataChangeListeners)	{
 			listener.onDataChanged();
@@ -80,7 +87,6 @@ public class DepartmentFormController implements Initializable{
 
 	private Department getFormData() {
 		Department obj = new Department();
-
 		ValidationException exception = new ValidationException("Validation exception!");
 
 		obj.setId(Utils.tryParseToInt(txtId.getText()));
@@ -95,13 +101,6 @@ public class DepartmentFormController implements Initializable{
 		return obj;
 	}
 
-	@FXML
-	public void onBtCancelAction(ActionEvent event)	{
-		System.out.println("clicou cancel");
-		Utils.currentStage(event).close();
-		
-	}
-
 	public void setDepartment(Department department) {
 		this.department = department;
 	}
@@ -113,7 +112,7 @@ public class DepartmentFormController implements Initializable{
 	private void setErrorMessages(Map<String, String> errors)	{
 		Set<String> fields = errors.keySet();
 		if (fields.contains("Name"))	{
-			lblError.setText(errors.get("Name"));
+			lblErrorName.setText(errors.get("Name"));
 		}
 	}
 

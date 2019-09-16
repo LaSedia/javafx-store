@@ -13,8 +13,8 @@ public class ValidationException extends RuntimeException	{
 		super(msg);
 	}
 	
-	public void addErrors(String name, String erroMessage)	{
-		errors.put(name, erroMessage);
+	public void addErrors(String fieldName, String erroMessage)	{
+		errors.put(fieldName, erroMessage);
 	}
 	
 	public Map<String, String> getErrors() {
