@@ -26,6 +26,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -107,6 +108,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
 
 			Stage dialogStage = new Stage();
 			dialogStage.setTitle("Enter Department data");
+			dialogStage.getIcons().add(new Image("/gui/images/dialogstage-icon.png"));
 			dialogStage.setScene(new Scene(pane));
 			dialogStage.setResizable(false);
 			dialogStage.initOwner(parentStage);

@@ -57,10 +57,10 @@ public class SellerFormController implements Initializable{
 	private TextField txtEmail;
 	
 	@FXML
-	private DatePicker dpBirthDate;
-	
-	@FXML
 	private TextField txtBaseSalary;
+
+	@FXML
+	private DatePicker dpBirthDate;
 	
 	@FXML
 	private ComboBox<Department> comboBoxDepartment;
@@ -72,10 +72,10 @@ public class SellerFormController implements Initializable{
 	private Label lblErrorEmail;
 	
 	@FXML
-	private Label lblErrorBirthDate;
-	
-	@FXML
 	private Label lblErrorBaseSalary;
+
+	@FXML
+	private Label lblErrorBirthDate;
 	
 	@FXML
 	private Label lblErrorDepartment;
@@ -117,6 +117,25 @@ public class SellerFormController implements Initializable{
 		
 	}
 
+	public void setSeller(Seller seller) {
+		this.seller = seller;
+	}
+
+	public void setServices(SellerService service, DepartmentService departmentService) {
+		this.service = service;
+		this.departmentService = departmentService;
+	}
+
+	private void setErrorMessages(Map<String, String> errors)	{
+		Set<String> fields = errors.keySet();
+		
+		lblErrorName.setText(fields.contains("Name") ? errors.get("Name") : "");	//if ? then : else
+		lblErrorEmail.setText(fields.contains("Email") ? errors.get("Email") : "");
+		lblErrorBaseSalary.setText(fields.contains("BaseSalary") ? errors.get("BaseSalary") : "");
+		lblErrorBirthDate.setText(fields.contains("BirthDate") ? errors.get("BirthDate") : "");
+		lblErrorDepartment.setText(fields.contains("Department") ? errors.get("Department") : "");
+	}
+
 	private void notifyDataChangeListener() {
 		for(DataChangeListener listener : dataChangeListeners)	{
 			listener.onDataChanged();
@@ -136,72 +155,35 @@ public class SellerFormController implements Initializable{
 
 		if (txtName.getText() == null || txtName.getText().trim().equals("")) {
 			exception.addErrors("Name", "Field can't be empty");
-		}	else	{
-			lblErrorName.setText("");	//melhorar depois
-			obj.setName(txtName.getText());
 		}
+		obj.setName(txtName.getText());
 
 		if (txtEmail.getText() == null || txtEmail.getText().trim().equals("")) {
 			exception.addErrors("Email", "Field can't be empty");
-		}	else	{
-			lblErrorEmail.setText("");
-			obj.setEmail(txtEmail.getText());
 		}
+		obj.setEmail(txtEmail.getText());
 		
 		if (dpBirthDate.getValue() == null)	{
 			exception.addErrors("BirthDate", "Field can't be empty");
 		}	else	{
-			lblErrorBirthDate.setText("");
 			Instant instant = Instant.from(dpBirthDate.getValue().atStartOfDay(ZoneId.systemDefault()));
 			obj.setBirthDate(Date.from(instant));
 		}
 
 		if (txtBaseSalary.getText() == null || txtBaseSalary.getText().trim().equals("")) {
 			exception.addErrors("BaseSalary", "Field can't be empty");
-		}	else	{
-			lblErrorBaseSalary.setText("");
-			obj.setBaseSalary(Utils.tryParseToDouble(txtBaseSalary.getText()));
 		}
+		obj.setBaseSalary(Utils.tryParseToDouble(txtBaseSalary.getText()));
 		
 		if (comboBoxDepartment.getValue() == null)	{
 			exception.addErrors("Department", "Field can't be empty");
-		}	else	{
-			lblErrorDepartment.setText("");
-			obj.setDepartment(comboBoxDepartment.getValue());
 		}
+		obj.setDepartment(comboBoxDepartment.getValue());
 		
 		if (exception.getErrors().size() > 0)	{
 			throw exception;
 		}
 		return obj;
-	}
-
-	public void setSeller(Seller seller) {
-		this.seller = seller;
-	}
-
-	public void setServices(SellerService service, DepartmentService departmentService) {
-		this.service = service;
-		this.departmentService = departmentService;
-	}
-	
-	private void setErrorMessages(Map<String, String> errors)	{
-		Set<String> fields = errors.keySet();
-		if (fields.contains("Name"))	{
-			lblErrorName.setText(errors.get("Name"));
-		}
-		if (fields.contains("Email"))	{
-			lblErrorEmail.setText(errors.get("Email"));
-		}
-		if (fields.contains("BaseSalary"))	{
-			lblErrorBaseSalary.setText(errors.get("BaseSalary"));
-		}
-		if (fields.contains("BirthDate"))	{
-			lblErrorBirthDate.setText(errors.get("BirthDate"));
-		}
-		if (fields.contains("Department"))	{
-			lblErrorDepartment.setText(errors.get("Department"));
-		}
 	}
 
 	@Override
