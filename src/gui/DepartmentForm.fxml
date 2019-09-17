@@ -30,6 +30,8 @@
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin></Label>
+            <TextField fx:id="txtId" disable="true" editable="false" prefHeight="25.0" prefWidth="226.0" GridPane.columnIndex="1" />
+            <TextField fx:id="txtName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
                   <Button fx:id="btSave" mnemonicParsing="false" onAction="#onBtSaveAction" text="Save" />
@@ -39,8 +41,6 @@
                   <Insets top="5.0" />
                </GridPane.margin>
             </HBox>
-            <TextField fx:id="txtId" disable="true" editable="false" prefHeight="25.0" prefWidth="226.0" GridPane.columnIndex="1" />
-            <TextField fx:id="txtName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
    </children>
